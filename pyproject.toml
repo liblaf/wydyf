@@ -5,7 +5,7 @@ requires = ["poetry-core"]
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
-version = "0.0.0"
+version = "0.0.1"
 version_files = ["pyproject.toml:version", "wydyf/__init__.py:__version__"]
 
 [tool.isort]
@@ -20,7 +20,7 @@ license = "MIT"
 name = "wydyf"
 readme = "README.md"
 repository = "https://github.com/liblaf/wydyf"
-version = "0.0.0"
+version = "0.0.1"
 
 [tool.poetry.dependencies]
 click = "^8.1.3"
