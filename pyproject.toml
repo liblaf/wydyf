@@ -13,7 +13,7 @@ profile = "black"
 
 [tool.poetry]
 authors = ["Qin Li <liblaf@outlook.com>"]
-description = "Drop-in Tutoring of Weiyang College, Tsinghua University"
+description = "未央书院答疑坊"
 documentation = "https://liblaf.github.io/wydyf/"
 homepage = "https://liblaf.github.io/wydyf/"
 license = "MIT"
