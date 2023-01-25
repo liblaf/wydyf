@@ -6,7 +6,7 @@ from typing import Optional
 import pandas as pd
 from rich.progress import Progress, TaskID
 
-from .define import DEFAULT_ACCOUNT_FILEPATH, DEFAULT_PASSFILE, DEFAULT_PREFIX
+from .constants import DEFAULT_ACCOUNT_FILEPATH, DEFAULT_PASSFILE, DEFAULT_PREFIX
 
 
 def read_accounts(filepath: str | Path = DEFAULT_ACCOUNT_FILEPATH) -> dict[str, str]:

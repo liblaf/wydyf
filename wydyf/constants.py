@@ -7,3 +7,5 @@ DEFAULT_PREFIX: Path = Path("public")
 DEFAULT_README_FILEPATH: Path = Path("docs/README.template.md")
 GRADING_ITEMS: list[str] = ["业务能力", "启发程度", "服务态度", "满意程度"]
 NAME: str = "未央书院答疑坊"
+TEMPLATE_DIR: Path = Path("docs")
+TEMPLATE_PATH: Path = Path("README.template.md")

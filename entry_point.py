@@ -1,3 +1,4 @@
-import runpy
+from wydyf.__main__ import main
 
-runpy.run_module(mod_name="wydyf", run_name="__main__")
+if __name__ == "__main__":
+    main()
