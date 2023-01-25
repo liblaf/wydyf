@@ -9,7 +9,7 @@ function exists() {
 
 function info() {
   if exists rich; then
-    rich --style "bold bright_blue" --print "${*}"
+    rich --print --style "bold bright_blue" "${*}"
   else
     echo -e -n "\x1b[1;94m"
     echo -n "${*}"
@@ -17,18 +17,14 @@ function info() {
   fi
 }
 
-function call() {
+function run() {
   info "+ ${*}"
   "${@}"
 }
 
-if [[ -n ${1-} ]]; then
-  workspace="${1}"
-else
-  workspace="$(git rev-parse --show-toplevel || pwd)"
-fi
+workspace="$(git rev-parse --show-toplevel || pwd)"
+cd "${workspace}"
 
-call cd "${workspace}"
+poetry install
 name="$(poetry version | awk '{ print $1 }')"
-call poetry install --with build
-call pyinstaller --onefile --name "${name}" --collect-all "${name}" "entry_point.py"
+pyinstaller --onefile --name "${name}" entry_point.py

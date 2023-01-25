@@ -9,7 +9,7 @@ function exists() {
 
 function info() {
   if exists rich; then
-    rich --style "bold bright_blue" --print "${*}"
+    rich --print --style "bold bright_blue" "${*}"
   else
     echo -e -n "\x1b[1;94m"
     echo -n "${*}"
@@ -17,16 +17,13 @@ function info() {
   fi
 }
 
-function call() {
+function run() {
   info "+ ${*}"
   "${@}"
 }
 
-if [[ -n ${1-} ]]; then
-  workspace="${1}"
-else
-  workspace="$(git rev-parse --show-toplevel || pwd)"
-fi
+workspace="$(git rev-parse --show-toplevel || pwd)"
+cd "${workspace}"
 
-call isort --profile black "${workspace}"
-call black "${workspace}"
+run isort --profile black "${workspace}"
+run black "${workspace}"
