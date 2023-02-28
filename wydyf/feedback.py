@@ -26,6 +26,7 @@ from .constants import (
     TEMPLATE_DIR,
     TEMPLATE_PATH,
 )
+import matplotlib.font_manager
 
 matplotlib.rcParams["font.sans-serif"] = "Noto Sans CJK SC"
 matplotlib.rc(group="axes", unicode_minus=False)
@@ -86,13 +87,13 @@ def process_feedback(
     name: str,
     df: pd.DataFrame,
     readme: Template,
-    last_updated_at: datetime,
+    last_update: datetime,
     prefix: str | Path = DEFAULT_PREFIX,
 ) -> None:
     prefix = Path(prefix)
     os.makedirs(name=prefix, exist_ok=True)
 
-    data: dict[str, Any] = {"name": name, "last_updated_at": last_updated_at}
+    data: dict[str, Any] = {"name": name, "last_update": last_update}
 
     count: int = len(df)
     data["count"] = count
@@ -148,12 +149,12 @@ def main(
         env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
         readme: Template = env.get_template(str(TEMPLATE_PATH))
         feedback: pd.DataFrame = read_feedback(filepath=feedback_path)
-        last_updated_at = feedback["提交答卷时间"].max()
+        last_update = feedback["提交答卷时间"].max()
         process_feedback(
             name=NAME,
             df=feedback,
             readme=readme,
-            last_updated_at=last_updated_at,
+            last_update=last_update,
             prefix=prefix,
         )
         groups = feedback.groupby(by="志愿者")
@@ -165,7 +166,7 @@ def main(
                 name=name,
                 df=df,
                 readme=readme,
-                last_updated_at=last_updated_at,
+                last_update=last_update,
                 prefix=prefix / name,
             )
             df.drop(columns=["您的姓名"], inplace=True)

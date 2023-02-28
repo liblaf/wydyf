@@ -1,6 +1,6 @@
 ## Hi, {{ name }}!
 
-Last Updated At: {{ last_updated_at }}
+Last Updated: {{ last_update }}
 
 总答疑 {{ count }} 次, {{ hours }} 小时
 
