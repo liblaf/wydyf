@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/liblaf/wydyf/compare/v0.1.0...v0.1.1) (2023-03-10)
+
+
+### Bug Fixes
+
+* add script ([f84b64f](https://github.com/liblaf/wydyf/commit/f84b64f3f1346850cdf13e0d0d29e9d8ec90c54a))
+* update README template ([57d8cc5](https://github.com/liblaf/wydyf/commit/57d8cc5d441a92308436b9b0d303ce6200929b8d))
+
 ## [0.1.0](https://github.com/liblaf/wydyf/compare/0.0.1...v0.1.0) (2023-01-25)
 
 ### Features
