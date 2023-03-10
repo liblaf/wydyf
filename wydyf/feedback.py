@@ -5,6 +5,7 @@ from typing import Any
 
 import click
 import matplotlib
+import matplotlib.font_manager
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader, Template
 from rich.progress import (
@@ -26,7 +27,6 @@ from .constants import (
     TEMPLATE_DIR,
     TEMPLATE_PATH,
 )
-import matplotlib.font_manager
 
 matplotlib.rcParams["font.sans-serif"] = "Noto Sans CJK SC"
 matplotlib.rc(group="axes", unicode_minus=False)

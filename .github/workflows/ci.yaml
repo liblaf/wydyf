@@ -1,4 +1,4 @@
-name: Build & Release
+name: CI/CD
 
 on:
   push:
@@ -15,45 +15,6 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
-  detect-build:
-    name: Detect Build Script
-    runs-on: ubuntu-latest
-    outputs:
-      build: ${{ steps.detect.outputs.build }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - id: detect
-        name: Detect Build Script
-        run: |
-          if [[ -f "script/build.sh" ]]; then
-            echo "build=true" >> "${GITHUB_OUTPUT}"
-            echo ":heavy_check_mark: Build Script Detected" >> "${GITHUB_STEP_SUMMARY}"
-          else
-            echo "build=false" >> "${GITHUB_OUTPUT}"
-            echo ":x: Build Script Not Found" >> "${GITHUB_STEP_SUMMARY}"
-          fi
-
-  detect-publish:
-    name: Detect PyPI Credential
-    runs-on: ubuntu-latest
-    outputs:
-      publish: ${{ steps.detect.outputs.publish }}
-    steps:
-      - id: detect
-        name: Detect PyPI Credential
-        run: |
-          if [[ -n "${PYPI_USERNAME}" && -n "${PYPI_PASSWORD}" ]]; then
-            echo "publish=true" >> "${GITHUB_OUTPUT}"
-            echo ":heavy_check_mark: PyPI Credential Detected" >> "${GITHUB_STEP_SUMMARY}"
-          else
-            echo "publish=false" >> "${GITHUB_OUTPUT}"
-            echo ":x: PyPI Credential Not Found" >> "${GITHUB_STEP_SUMMARY}"
-          fi
-        env:
-          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-
   build-pkg:
     name: Build Package
     runs-on: ubuntu-latest
@@ -80,9 +41,6 @@ jobs:
 
   build-exe:
     name: Build Executable
-    needs:
-      - detect-build
-    if: needs.detect-build.outputs.build == 'true'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -93,18 +51,15 @@ jobs:
         name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: poetry
       - name: Install Dependencies
         run: poetry install --no-interaction
       - name: Build Executable
-        run: poetry run bash "script/build.sh"
-      - if: runner.os != 'Windows'
-        name: Rename Build Artifact
-        run: mv dist/* "dist/$(poetry version | tr ' ' -)-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}"
-      - if: runner.os == 'Windows'
-        name: Rename Build Artifact
-        run: mv dist/* "dist/$(poetry version | tr ' ' -)-${{ runner.os }}-${{ runner.arch }}-py${{ steps.python.outputs.python-version }}.exe"
+        run: poetry run make rename
+        env:
+          RUNNER_OS: ${{ runner.os }}
+          RUNNER_ARCH: ${{ runner.arch }}
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -116,8 +71,6 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-        python-version:
-          - "3.11"
 
   release:
     name: Create GitHub Release
@@ -156,9 +109,8 @@ jobs:
   publish:
     name: Publish to PyPI
     needs:
-      - detect-publish
       - release
-    if: needs.detect-publish.outputs.publish == 'true' && needs.release.outputs.releases-created == 'true'
+    if: needs.release.outputs.releases-created == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
